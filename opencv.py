@@ -46,11 +46,22 @@ while cap.isOpened():
         
         motion = 1 # Motion detected!
 
+        M = cv2.moments(contour)
+
+        # To prevent a divide-by-zero error (if a contour is impossibly small)
+        if M["m00"] != 0:
+            # Calculate the true X and Y center of mass
+            cx = int(M["m10"] / M["m00"])
+            cy = int(M["m01"] / M["m00"])
+        else:
+            cx, cy = 0, 0
+
         # Extract the box coordinates from the moving contour
         x, y, w, h = cv2.boundingRect(contour)
         
         # Draw a custom green rectangle around the movement zone
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
         cv2.putText(frame, "MOTION DETECTED", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     # Display the different stages of the computer vision pipeline
