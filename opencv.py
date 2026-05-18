@@ -31,7 +31,7 @@ while cap.isOpened():
 
     # Step 4: Apply a Threshold to get a clean binary (black/white) image
     # If a pixel value change is greater than 30, change it to white (255)
-    _, thresh_frame = cv2.threshold(diff_frame, 30, 255, cv2.THRESH_BINARY)
+    _, thresh_frame = cv2.threshold(diff_frame, 60, 255, cv2.THRESH_BINARY)
     
     # Dilate the white areas to fill in small holes inside the moving object
     thresh_frame = cv2.dilate(thresh_frame, None, iterations=2)
@@ -41,7 +41,7 @@ while cap.isOpened():
 
     for contour in contours:
         # Filter out tiny movements (like a insect or a curtain twitching)
-        if cv2.contourArea(contour) < 5000:
+        if cv2.contourArea(contour) < 10000:
             continue
         
         motion = 1 # Motion detected!
